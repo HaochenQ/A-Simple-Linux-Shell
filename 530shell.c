@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
         // child process
         else if (pid == 0)
         {
-            if (parameter[0] == 0)
+            if (parameter[0] == NULL)
             {
                 execlp(cmd, cmd, (char *)0);
             }
