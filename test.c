@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
         c_l = 0;
         memset(para, 0, MAXLINE);
 
-        printf("buf:%s\n", buf);
+        //printf("buf:%s\n", buf);
         while (buf[i] == ' ') //将命令开始的空格都给忽略掉
             i++;
         while (buf[i] != ' ') //读取命令
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
             perror("waitpid error");
         }
         memset(buf, 0, MAXLINE); //重新设置buf的缓存空间
-        printf("%%");
+        printf("%% ");
     }
     return 0;
 }

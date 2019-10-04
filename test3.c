@@ -1,9 +1,3 @@
-/**
- * File: 530shell.c
- * Description: A simple Linux Shell
- * Author: Haochen Qi
- * Hornor pledge: This program is finished individually
- * */
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -18,14 +12,14 @@ int main(int argc, char *argv[])
     char buffer[size];
     char cmd[size];
     char parameter[size];
-
+    
+    char **tokens = malloc(size * sizeof(char*));
     pid_t pid;
     int status;
     //initial position
     int i = 0;
     int j = 0;
     int z = 0;
-    //print the first '%'
     printf("%% ");
     while ((fgets(buffer, size, stdin)) != NULL)
     {
@@ -33,44 +27,46 @@ int main(int argc, char *argv[])
         i = 0;
         j = 0;
         z = 0;
-        //a=0;
         memset(cmd, 0, size);
         memset(parameter, 0, size);
         for (int k = 0; k < size; k++)
         {
-            if (buffer[k] == '\n' || buffer[k] == EOF)
+            if (buffer[k]=='\n')
             {
-                buffer[k] = '\0';
+                buffer[k]='\0';
             }
+            
         }
-        /*if (buffer[strlen(buffer) - 1] == '\n' || buffer[strlen(buffer) - 1] == EOF)
-            buffer[strlen(buffer) - 1] = '\0';*/
-        while (buffer[i] == ' '&&i<=size) //ignore the space before cmd
+        if (buffer[strlen(buffer) - 1] == '\n' || buffer[strlen(buffer) - 1] == EOF)
+            buffer[strlen(buffer) - 1] = '\0';
+        while (buffer[i] == ' ')
             i++;
-        while (buffer[i] != ' '&&i<=size) //ignore the space between cmd and para
+        while (buffer[i] != ' ')
         {
+            //tokens[j] = buffer[i];
             cmd[j] = buffer[i];
             i++;
             j++;
         }
-        while (buffer[i] == ' '&&i<=size)
+        while (buffer[i] == ' ')
             i++;
-        while (buffer[i] != '\0'&&i<=size)
-        {
-            if (buffer[i] == ' '&&i<=size) //convert multiple spaces into one
+        while (buffer[i] != '\0')
+        {   
+            if (buffer[i]==' ')
             {
-                while (buffer[i + 1] == ' '&&i<=size)
-                {
+                while (buffer[i+1]==' '){
                     i++;
                 }
             }
-            if (buffer[i] == '\t'&&i<=size) //convert tab into space
+            if (buffer[i]=='\t')
             {
-                buffer[i] = ' ';
+                buffer[i]=' ';
             }
+            //tokens[j]=buffer[i];
             parameter[z] = buffer[i];
             z++;
             i++;
+            //j++;
         }
         pid = fork();
         if (pid < 0)
@@ -84,13 +80,11 @@ int main(int argc, char *argv[])
             {
                 execlp(cmd, cmd, (char *)0);
             }
-            //char* cmd1=(char*)cmd;
-            //char* para=(char*)parameter;
-            if (execlp(cmd, cmd, parameter, (char *)0) == -1)
+
+            if (execlp(cmd,cmd,parameter,(char *)0) == -1)
             {
                 perror("execution error");
             }
-
             exit(127);
         }
         // parent process
